@@ -1,0 +1,82 @@
+###
+GET http://localhost:7000/sign-in
+Content-type: application/json
+
+###
+
+POST http://localhost:7000/sign-in
+Content-type: application/json
+
+{
+  "email":"useuddduuur1@mail.com",
+  "name":"sdfsdf",
+  "password":"fdsfsdf",
+  "passwordConfirmation":"fdsfsdf",
+  "username":"sadasdsad",
+  "type":"mentor",
+  "surname":"asdasdsa",
+  "position":"1"
+}
+
+###
+
+POST http://127.0.0.1:7000/login
+Content-type: application/json
+
+{
+  "email": "user@mail.com",
+  "password": "fdsfsdf"
+}
+
+###
+
+GET http://localhost:7000/user/edit
+Content-type: application/json
+j-token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsIm5hbWUiOiJzZGZzZGYiLCJzdXJuYW1lIjoiYXNkYXNkc2EiLCJlbWFpbCI6InVzZXVkZGR1dXVyMUBtYWlsLmNvbSIsImlhdCI6MTY1Nzk4MTM2MCwiZXhwIjoxNjU4MDY3NzYwfQ.0rd312hCeixTyBiJwc8jfg95J8ziohR8R9ryydMGw_Q
+
+
+###
+
+PUT http://localhost:7000/user/edit
+Content-type: application/json
+j-token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsIm5hbWUiOiJzZGZzZGYiLCJzdXJuYW1lIjoiYXNkYXNkc2EiLCJlbWFpbCI6InVzZXVkZGR1dXVyMUBtYWlsLmNvbSIsImlhdCI6MTY1Nzk4MTM2MCwiZXhwIjoxNjU4MDY3NzYwfQ.0rd312hCeixTyBiJwc8jfg95J8ziohR8R9ryydMGw_Q
+
+{
+  "name":"ffffff",
+  "surname":"asdasda",
+  "position_id":"1",
+  "type":"mentor",
+  "description": "",
+  "education": "",
+  "experience": "",
+  "about": ""
+}
+
+###
+
+PUT http://localhost:7000/token
+Content-type: application/json
+
+{
+  "r-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzUsIm5hbWUiOiJmZmZmZmYiLCJzdXJuYW1lIjoiYXNkYXNkYSIsImVtYWlsIjoidXNlckBtYWlsLmNvbSIsImlhdCI6MTY1Nzk4MTcxNiwiZXhwIjoxNjU4MDY4MTE2fQ.zlOY9hdNB1hfL78qMMIzQPw2iEdTNTQgmC7qT7d9s6A"
+}
+
+###
+
+GET http://localhost:7000/user/profile/38
+Content-type: application/json
+j-token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsIm5hbWUiOiJzZGZzZGYiLCJzdXJuYW1lIjoiYXNkYXNkc2EiLCJlbWFpbCI6InVzZXVkZGR1dXVyMUBtYWlsLmNvbSIsImlhdCI6MTY1Nzk4MTM2MCwiZXhwIjoxNjU4MDY3NzYwfQ.0rd312hCeixTyBiJwc8jfg95J8ziohR8R9ryydMGw_Q
+
+###
+
+GET http://localhost:7000/user/search
+Content-type: application/json
+j-token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsIm5hbWUiOiJzZGZzZGYiLCJzdXJuYW1lIjoiYXNkYXNkc2EiLCJlbWFpbCI6InVzZXVkZGR1dXVyMUBtYWlsLmNvbSIsImlhdCI6MTY1Nzk4MTM2MCwiZXhwIjoxNjU4MDY3NzYwfQ.0rd312hCeixTyBiJwc8jfg95J8ziohR8R9ryydMGw_Q
+
+###
+
+GET http://localhost:7000/user/search?name=ffffff&surname=asdasda&date=2022-07-16&type=mentor
+Content-type: application/json
+j-token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsIm5hbWUiOiJzZGZzZGYiLCJzdXJuYW1lIjoiYXNkYXNkc2EiLCJlbWFpbCI6InVzZXVkZGR1dXVyMUBtYWlsLmNvbSIsImlhdCI6MTY1Nzk4MTM2MCwiZXhwIjoxNjU4MDY3NzYwfQ.0rd312hCeixTyBiJwc8jfg95J8ziohR8R9ryydMGw_Q
+
+###
