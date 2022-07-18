@@ -1,6 +1,8 @@
 import myModelTmp from '../core/myModelTmp.js';
 import {body} from 'express-validator';
 import crypto from 'crypto';
+import PositionListModel from './PositionListModel.js';
+const positionListModel = new PositionListModel();
 
 function createPassword(string){
     return crypto.createHash('sha1').update(string).digest('hex');
@@ -9,15 +11,8 @@ function createPassword(string){
 export default class userModel extends myModelTmp{
     constructor(){
         super('users');
-
-        //TODO get positions id for validation from positions_list table
-
         this.userNotFoundErrorMessage = 'email or password is wrong';
-
-        this.typeList = [
-            'mentor',
-            'mentee'
-        ];
+        this.typeList = [ 'mentor', 'mentee' ];
 
         this.loginBody = [
             body('email').notEmpty().trim().withMessage('email and password is require'),
@@ -33,9 +28,13 @@ export default class userModel extends myModelTmp{
             body('about').trim(),
 
             body('position').notEmpty().trim().withMessage('position/specification is require')
-                .isIn(["1", "2", "3"]).withMessage('choose from list please "1", "2", "3"'),
+                .custom(async value => {
+                    return positionListModel.findPositionListById(parseInt(value)).then(position => {
+                        if(!position) throw new Error('position id not found in db');
+                    });
+                }),
             body('type').notEmpty().withMessage('type is require')
-                .isIn(['mentor','mentee']).withMessage("choose 'mentor','mentee' only"),
+                .isIn(this.typeList).withMessage(`choose ${this.typeList.join(', ')} only`),
             body('email').isEmail().normalizeEmail().withMessage('please write true email')
                 .custom(async value => {
                     return this.findUserByEmail(value).then(user => {
@@ -78,39 +77,40 @@ export default class userModel extends myModelTmp{
 
     async insert(data){
         let query = `INSERT INTO ${this._table} `;
-        query += ` (${[
-                    'name', 
-                    'surname', 
-                    'email', 
-                    'password', 
-                    'type', 
-                    'position_id', 
-                    'description', 
-                    'education', 
-                    'experience', 
-                    'about'].join(', ')}) 
-                VALUES (
-                    '${data.name}',
-                    '${data.surname}',
-                    '${data.email}',
-                    '${createPassword(data.password)}',
-                    '${data.type}',
-                    ${data.position},
-                    '${data.description}',
-                    '${data.education}',
-                    '${data.experience}',
-                    '${data.about}')`;
+        query += ` (
+            name, 
+            surname, 
+            email, 
+            password, 
+            type,
+            position_id,
+            description,
+            education,
+            experience,
+            about) 
+        VALUES (
+            '${data.name}',
+            '${data.surname}',
+            '${data.email}',
+            '${createPassword(data.password)}',
+            '${data.type}',
+            ${data.position},
+            '${data.description}',
+            '${data.education}',
+            '${data.experience}',
+            '${data.about}')`;
 
-        await this.exec(query);
 
-        return true;
+        console.log(query);
+
+        let [user] = await this.exec(query);
+
+        return user.insertId;
     }
 
     async getFilteredUsers(myUserId,data){
         let query = `SELECT * FROM users WHERE users.id != ${myUserId} `;
         let where_array = [];
-
-        console.log(data);
 
         if(data.name && data.name.length){
             where_array.push(`name = '${data.name}'`);
@@ -130,42 +130,27 @@ export default class userModel extends myModelTmp{
             query += where_array.join(' AND ');
         }
 
-
         let [result] = await this.exec(query);
 
         return result;
     }
 
     async getById(userId){
-        let [[user]] = await this.exec(`SELECT  
-              name, 
-              surname, 
-              type,  
-              position_id,  
-              education,  
-              description,  
-              experience,  
-              about
-            FROM users 
-            WHERE id = ${userId}`);
+        let query = 'SELECT name, surname, type, position_id, education, description, experience, about';
+        query += ` FROM users WHERE id = ${userId}`;
+
+        let [[user]] = await this.exec(query);
 
         return user;
     }
 
     async getUserInfoById(userId){
-        let [[user]] = await this.exec(`SELECT  
-              name, 
-              surname, 
-              email, 
-              type,  
-              positions_list.title AS position_title,  
-              education,  
-              description,  
-              experience,  
-              about
-            FROM users 
-              LEFT JOIN positions_list ON users.position_id = positions_list.id
-            WHERE users.id = ${userId}`);
+        let query = 'SELECT name, email, surname, type, positions_list.title AS position_title, education, description, experience, about';
+        query += ` FROM users `;
+        query += ` LEFT JOIN positions_list ON users.position_id = positions_list.id `;
+        query += ` WHERE users.id = ${userId} `;
+
+        let [[user]] = await this.exec(query);
 
         return user;
     }

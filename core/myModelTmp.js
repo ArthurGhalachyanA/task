@@ -5,8 +5,10 @@ export default class myModelTmp{
     constructor(table){
         this.db = mysql;
         this._table = table;
-        this.result = [];
         this.myValidationErrors = [];
+        this.dbInsertErrorMessage = 'insert error';
+        this.dbUpdateErrorMessage = 'update error';
+        this.unhendlerError = 'after insert item not found';
     }
 
     myValidationRun(req){
@@ -39,9 +41,9 @@ export default class myModelTmp{
 
         query += `SET ${fields.join(', ')} WHERE ${this._table}.id = ${id}`;
 
-        await this.exec(query);
+        let [item] = await this.exec(query);
 
-        return true;
+        return item.changedRows;
     }
 
     async exec(query){

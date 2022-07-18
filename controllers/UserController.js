@@ -16,7 +16,7 @@ export default function(app){
     app.put('/user/edit', userModel.updateBody,  async (req, res) => {
         switch(false){
             case userModel.myValidationRun(req): res.resData.errors.push(userModel.myGetErrors()); break;
-            case await userModel.update(res.authUser.id, req.body): res.resData.errors.push(['update error']); break;
+            case !!await userModel.update(res.authUser.id, req.body): res.resData.errors.push([userModel.dbUpdateErrorMessage]); break;
             default:
                 res.resData.success = true;
         }
